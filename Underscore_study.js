@@ -149,6 +149,9 @@ var jPluck = function (list, propertyName) {
 	return res;
 };
 
+//jWhere(listOfPlays, {author: "Shakespeare", year: 1611});
+//=> [{title: "Cymbeline", author: "Shakespeare", year: 1611},
+//    {title: "The Tempest", author: "Shakespeare", year: 1611}]
 var jWhere = function (list, properties) {
 	var arr = [], memo;
 	jEach(list, function (element, index, list) {
@@ -161,17 +164,21 @@ var jWhere = function (list, properties) {
 	return arr;
 };
 
-//max([{age: 10},{age: 15}], function (obj) { return obj.age });
+jWhere([{author: "Shakespeare", year: 1611}], {author: "Shakespeare", year: 121});
+
+//max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
+//=> returns {age: 15}
 var max = function (list, iterator, context) {
-	
-	jEach(list, function (element, i, list) {
+	var memo;
+    jEach(list, function (element, i, list) {
 		jEach(element, function (value, key, element) {
-			console.log(value); //10,15
-			iterator(element);
-			});
+			memo = iterator(element);
 		});
+        console.log(memo, element);
+    });
 };
 
+//max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
 
 //-------skipped--------//
 /*
