@@ -40,7 +40,7 @@ var jMap = function (list, iterator) {
 			resArr.push(iterator(element));
 	});
 	console.log(resArr);
-}
+};
 
 
 var jReduce = function(list, iterator, memo) {
@@ -55,15 +55,16 @@ var red = function (list, callback, memo) {
 		memo = callback(memo, element, index, list);
 	});
 			return memo;
-}
+};
 
 
 
 var jFind = function (list, predicate) {
 	var a; 
 	jEachReverse(list, function(element, index, list){
-		if (predicate(element) == true) {
-			return a = element;
+		if (predicate(element) === true) {
+			a = element;
+            return a;
 		}
 	});
 	return a;
@@ -72,7 +73,7 @@ var jFind = function (list, predicate) {
 var jFilter = function (list, predicate) {
 	var a = [];
 	jEach(list, function(element, index, list){
-		if (predicate(element) == true) {
+		if (predicate(element) === true) {
 			a.push(element);
 		}
 	});
@@ -82,7 +83,7 @@ var jFilter = function (list, predicate) {
 var jReject = function (list, predicate) {
 	var a = [];
 	jEach(list, function (element, index, list){
-		if (predicate(element) == false) {
+		if (predicate(element) === false) {
 			a.push(element); 
 		}
 	});
@@ -92,7 +93,7 @@ var jReject = function (list, predicate) {
 var jEvery = function (list, predicate) {
 	var a = [];
 	jEach(list, function (element, index, list){
-		if (predicate(element) == true) {
+		if (predicate(element) === true) {
 			a.push(element);
 		}
 	});
@@ -106,10 +107,12 @@ var jEvery = function (list, predicate) {
 var jSome = function (list, predicate) {
 	var res;
 	jEvery(list, function (element, index, list){
-		if (predicate(element) == true) {
-			return res = true;
+		if (predicate(element) === true) {
+			res = true;
+            return res;
 		} else {
-			return res = false;
+			res = false;
+            return res;
 		}
 	});
 	return res;
@@ -153,7 +156,7 @@ var jWhere = function (list, properties) {
 			if (element[key] == value) {
 				arr.push(element);
 			}
-		})
+		});
 	});
 	return arr;
 };
@@ -165,9 +168,8 @@ var max = function (list, iterator, context) {
 		jEach(element, function (value, key, element) {
 			console.log(value); //10,15
 			iterator(element);
-			}
+			});
 		});
-	});
 };
 
 
