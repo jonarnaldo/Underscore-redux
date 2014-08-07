@@ -160,9 +160,12 @@ var jWhere = function (list, properties) {
 
 //max([{age: 10},{age: 15}], function (obj) { return obj.age });
 var max = function (list, iterator, context) {
+	
 	jEach(list, function (element, i, list) {
 		jEach(element, function (value, key, element) {
 			console.log(value); //10,15
+			iterator(element);
+			}
 		});
 	});
 };
