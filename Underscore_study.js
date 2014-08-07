@@ -178,6 +178,55 @@ var max = function (list, iterator, context) {
     });
 };
 
+//compare two objects {a: 1, b: 2, c: 3} and {b: 2, c: 3}
+//loop through the first object
+//loop through second object and compare value to current element in first object
+//if the two objects are equivalent then move on to next element in first object
+//if the two objects are not equivalent then return
+var forEach = function (list, callback) {
+    for (var i = 0; i < list.length; i++) {
+        callback(list[i], i, list);
+    }
+};
+
+
+var compare = function (obj1, obj2) {
+    var res = [], b = 0;
+    
+    for (var a in obj2) {
+        b++;
+    }
+    
+    for (var key1 in obj1) {
+        for (var key2 in obj2) {
+            if (obj1[key1] == obj2[key2]) {
+                res.push(obj1[key1]);
+            }
+        }
+    }
+    if (res.length == b) {
+        return obj1;
+    } else {
+        return null;
+    }
+};
+
+var jWhere = function (list, properties) {
+    var res = [];
+    forEach(list, function (element, index, array) {
+        if (compare(element, properties)) {
+            res.push(compare(element, properties));
+        }
+    });
+    if (res.length > 0) {
+        console.log (res);
+    } else {
+        console.log('no results');
+    }
+};
+
+compareMany([{title: "The Tempest", author: "Shakespeare", year: 1611},{title: "Romeo and Juliet", author: "Shakespeare", year: 1611}],{author: "Shakespeare", year: 1611});
+
 //max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
 
 //-------skipped--------//
