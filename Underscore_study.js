@@ -153,84 +153,62 @@ var jPluck = function (list, propertyName) {
 //=> [{title: "Cymbeline", author: "Shakespeare", year: 1611},
 //    {title: "The Tempest", author: "Shakespeare", year: 1611}]
 var jWhere = function (list, properties) {
-	var arr = [], memo;
-	jEach(list, function (element, index, list) {
-		jEach(properties, function (value, key, list) {
-			if (element[key] == value) {
-				arr.push(element);
+	var compare = function (obj1, obj2) {
+		var res = [], counter = 0;
+
+		for (var i in obj2) {
+			counter++;
+		}
+
+		for (var j in obj1) {
+			for (var k in obj2) {
+				if (obj1[j] == obj2[k]) {
+					res.push(obj2[k]);
+				}
 			}
-		});
+		}
+
+		if (res.length == counter) {
+			return obj1;
+		} else {
+			return null;
+		}
+	};
+
+	var res = [], temp;
+	
+	jEach(list, function (element, index, list){
+		if (compare(element, properties)) {
+			res.push(compare(element, properties));
+		}
 	});
-	return arr;
+
+	if (res.length > 0) {
+		return res;
+	} else {
+		return "nothing found!";
+	}
+	
 };
 
-jWhere([{author: "Shakespeare", year: 1611}], {author: "Shakespeare", year: 121});
 
 //max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
-//=> returns {age: 15}
+//=> returns {name: "Jon", age: 15}
 var max = function (list, iterator, context) {
-	var memo;
+	var res;
     jEach(list, function (element, i, list) {
 		jEach(element, function (value, key, element) {
-			memo = iterator(element);
+			if (res < iterator(element);
 		});
         console.log(memo, element);
     });
 };
-
-//compare two objects {a: 1, b: 2, c: 3} and {b: 2, c: 3}
-//loop through the first object
-//loop through second object and compare value to current element in first object
-//if the two objects are equivalent then move on to next element in first object
-//if the two objects are not equivalent then return
-var forEach = function (list, callback) {
-    for (var i = 0; i < list.length; i++) {
-        callback(list[i], i, list);
-    }
-};
-
-
-var compare = function (obj1, obj2) {
-    var res = [], b = 0;
-    
-    for (var a in obj2) {
-        b++;
-    }
-    
-    for (var key1 in obj1) {
-        for (var key2 in obj2) {
-            if (obj1[key1] == obj2[key2]) {
-                res.push(obj1[key1]);
-            }
-        }
-    }
-    if (res.length == b) {
-        return obj1;
-    } else {
-        return null;
-    }
-};
-
-var jWhere = function (list, properties) {
-    var res = [];
-    forEach(list, function (element, index, array) {
-        if (compare(element, properties)) {
-            res.push(compare(element, properties));
-        }
-    });
-    if (res.length > 0) {
-        console.log (res);
-    } else {
-        console.log('no results');
-    }
-};
-
-compareMany([{title: "The Tempest", author: "Shakespeare", year: 1611},{title: "Romeo and Juliet", author: "Shakespeare", year: 1611}],{author: "Shakespeare", year: 1611});
-
 //max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
 
+
+
 //-------skipped--------//
-/*
+
 var jreduceRight = function (list, iterator, memo) {
 
 };
