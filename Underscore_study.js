@@ -216,6 +216,30 @@ var jMax = function (list, iterator, context) {
 	return res;
 };
 
+//need to add functionality if iterator isn't given
+var jMin = function (list, iterator, context) {
+	var property, memo, res;
+	jEach(list, function (element, index, list) {
+		memo = iterator(element)
+		property = memo + 1;
+		if (property > memo) {
+			property = memo;
+		}
+	});
+	jEach(list, function (element, index, array) {
+		//if element contains property, save property to res
+		if (jContains(element, property)) {
+			res = element;
+		}
+	});
+	return res;
+};
+
+//sortBy([1, 2, 3, 4, 5, 6], function(num){ return Math.sin(num); });
+//=> [5, 4, 6, 3, 1, 2]
+var sortBy = function(list, iterator, context) {
+
+};
 
 /*
 var jreduceRight = function (list, iterator, memo) {
