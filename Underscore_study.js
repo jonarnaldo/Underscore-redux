@@ -238,7 +238,29 @@ var jMin = function (list, iterator, context) {
 //sortBy([1, 2, 3, 4, 5, 6], function(num){ return Math.sin(num); });
 //=> [5, 4, 6, 3, 1, 2]
 var sortBy = function(list, iterator, context) {
+	var sort = function (list) {
+		var temp;
+		for (var i = 0; i < list.length; i++) {
+			for (var j = i+1; j < list.length; j++) {
+				if (list[j] < list[i]) {
+					temp = list[i];
+					list[i] = list[j];
+					list[j] = temp;	
+				}
+			}
+		}
+		return list;		
+	};
+	if (arguments.length > 1) {
+		var arr;
+		jEach(list, function (elements, index, array) {
+			arr.push(iterator(elements));
+		});
 
+		sort(arr);	
+	} else {
+		sort(list);
+	}
 };
 
 /*
