@@ -195,13 +195,17 @@ var jWhere = function (list, properties) {
 //max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
 //=> returns {name: "Jon", age: 15}
 var max = function (list, iterator, context) {
-	var res;
-    jEach(list, function (element, i, list) {
+	var buffer = 0, res, property;
+	jEach(list, function (element, i, list) {
 		jEach(element, function (value, key, element) {
-			if (res < iterator(element);
+			property = value;
+			if (buffer < iterator(element)) {
+				buffer = iterator(element);
+			}
 		});
-        console.log(memo, element);
-    });
+		res = 
+	});
+	return property;
 };
 //max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
 
