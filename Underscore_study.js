@@ -118,11 +118,15 @@ var jSome = function (list, predicate) {
 	return res;
 };
 
+//jContains([1,2,3],3)
 var jContains = function (list, value) {
-	var buffer = value;
+	var b;
 	jEach(list, function(element, index, list){
-
+		if (element == value) {
+			b = true;
+		} 
 	});
+	return b;
 };
 
 var jInvoke = function (list, methodName) {
@@ -194,34 +198,28 @@ var jWhere = function (list, properties) {
 
 //max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
 //=> returns {name: "Jon", age: 15}
-var max = function (list, iterator, context) {
-	var buffer = 0, res, property;
-	jEach(list, function (element, i, list) {
-		jEach(element, function (value, key, element) {
-			property = value;
-			if (buffer < iterator(element)) {
-				buffer = iterator(element);
-			}
-		});
-		res = 
+var jMax = function (list, iterator, context) {
+	var property = 0, memo, res;
+	jEach(list, function (element, index, list) {
+		memo = iterator(element)
+		if (property < memo) {
+			property = memo;
+		}
 	});
-	return property;
+
+	jEach(list, function (element, index, array) {
+		//if element contains property, save property to var
+		if (jContains(element, property)) {
+			res = element;
+		}
+	});
+	return res;
 };
-//max([{name: "Steve", age: 10},{name: "Jon", age: 15}], function (obj) { return obj.age });
 
 
-
-//-------skipped--------//
-
+/*
 var jreduceRight = function (list, iterator, memo) {
 
-};
-
-var jWhere = function (list, properties) {
-	var a = [];
-	jEach(list, function(element, index, list){
-
-	});
 };
 
 var jFindWhere = function (list, properties) {};
