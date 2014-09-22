@@ -1,8 +1,18 @@
-var alert = function (element) {
-	console.log (element);
+var slice = Array.prototype.slice;
+
+var flatten = function(arr) {
+	var resArr = [];
+	each(arr, function (element) {
+		if (!(element instanceof Array)) {
+			resArr.push(element);
+		} else {
+			resArr = arr.concat(flatten(element));
+		}
+	});
+	return resArr;
 };
 
-var jEach = function (list, iterator) {
+var each = function (list, iterator) {
 	if (typeof list === 'object') {
 		for (var key in list) {
 			var value = list[key];
@@ -18,7 +28,7 @@ var jEach = function (list, iterator) {
 	}
 };
 
-var jEachReverse = function (list, iterator) {
+var eachReverse = function (list, iterator) {
 	if (typeof list === 'object') {
 		for (var key in list) {
 			var value = list[key];
@@ -36,7 +46,7 @@ var jEachReverse = function (list, iterator) {
 
 var jMap = function (list, iterator) {
 	var resArr = [];
-	jEach(list, function (element, index, list){
+	each(list, function (element, index, list){
 			resArr.push(iterator(element));
 	});
 	console.log(resArr);
@@ -44,14 +54,14 @@ var jMap = function (list, iterator) {
 
 
 var jReduce = function(list, iterator, memo) {
-	jEach(list, function (element, index, list){
+	each(list, function (element, index, list){
 		memo = iterator(memo, element, index, list);
 	});
 	return memo;
 };
 
 var red = function (list, callback, memo) {
-	jEach(list, function (element, index, list) {
+	each(list, function (element, index, list) {
 		memo = callback(memo, element, index, list);
 	});
 			return memo;
@@ -61,7 +71,7 @@ var red = function (list, callback, memo) {
 
 var jFind = function (list, predicate) {
 	var a; 
-	jEachReverse(list, function(element, index, list){
+	eachReverse(list, function(element, index, list){
 		if (predicate(element) === true) {
 			a = element;
             return a;
@@ -72,7 +82,7 @@ var jFind = function (list, predicate) {
 
 var jFilter = function (list, predicate) {
 	var a = [];
-	jEach(list, function(element, index, list){
+	each(list, function(element, index, list){
 		if (predicate(element) === true) {
 			a.push(element);
 		}
@@ -82,7 +92,7 @@ var jFilter = function (list, predicate) {
 
 var jReject = function (list, predicate) {
 	var a = [];
-	jEach(list, function (element, index, list){
+	each(list, function (element, index, list){
 		if (predicate(element) === false) {
 			a.push(element); 
 		}
@@ -92,7 +102,7 @@ var jReject = function (list, predicate) {
 
 var jEvery = function (list, predicate) {
 	var a = [];
-	jEach(list, function (element, index, list){
+	each(list, function (element, index, list){
 		if (predicate(element) === true) {
 			a.push(element);
 		}
@@ -118,10 +128,10 @@ var jSome = function (list, predicate) {
 	return res;
 };
 
-//jContains([1,2,3],3)
-var jContains = function (list, value) {
+//contains([1,2,3],3)
+var contains = function (list, value) {
 	var b;
-	jEach(list, function(element, index, list){
+	each(list, function(element, index, list){
 		if (element == value) {
 			b = true;
 		} 
@@ -135,7 +145,7 @@ var jInvoke = function (list, methodName) {
 	console.log(window[fnstring]);
 
 	if (typeof fn == "function") {
-		jEach(list, function(element, index, list) {
+		each(list, function(element, index, list) {
 			fn(element);
 		});
 	}
@@ -143,7 +153,7 @@ var jInvoke = function (list, methodName) {
 
 var jPluck = function (list, propertyName) {
 	var res = [];
-	jEach(list, function (element, index, list) {
+	each(list, function (element, index, list) {
 		for (var key in element) {
 			if (key == propertyName) {
 				res.push(element[key]);
@@ -181,7 +191,7 @@ var jWhere = function (list, properties) {
 
 	var res = [], temp;
 	
-	jEach(list, function (element, index, list){
+	each(list, function (element, index, list){
 		if (compare(element, properties)) {
 			res.push(compare(element, properties));
 		}
@@ -200,16 +210,16 @@ var jWhere = function (list, properties) {
 //=> returns {name: "Jon", age: 15}
 var jMax = function (list, iterator, context) {
 	var property = 0, memo, res;
-	jEach(list, function (element, index, list) {
-		memo = iterator(element)
+	each(list, function (element, index, list) {
+		memo = iterator(element);
 		if (property < memo) {
 			property = memo;
 		}
 	});
 
-	jEach(list, function (element, index, array) {
+	each(list, function (element, index, array) {
 		//if element contains property, save property to var
-		if (jContains(element, property)) {
+		if (contains(element, property)) {
 			res = element;
 		}
 	});
@@ -219,16 +229,16 @@ var jMax = function (list, iterator, context) {
 //need to add functionality if iterator isn't given
 var jMin = function (list, iterator, context) {
 	var property, memo, res;
-	jEach(list, function (element, index, list) {
-		memo = iterator(element)
+	each(list, function (element, index, list) {
+		memo = iterator(element);
 		property = memo + 1;
 		if (property > memo) {
 			property = memo;
 		}
 	});
-	jEach(list, function (element, index, array) {
+	each(list, function (element, index, array) {
 		//if element contains property, save property to res
-		if (jContains(element, property)) {
+		if (contains(element, property)) {
 			res = element;
 		}
 	});
@@ -238,29 +248,21 @@ var jMin = function (list, iterator, context) {
 //sortBy([1, 2, 3, 4, 5, 6], function(num){ return Math.sin(num); });
 //=> [5, 4, 6, 3, 1, 2]
 var sortBy = function(list, iterator, context) {
-	var sort = function (list) {
-		var temp;
-		for (var i = 0; i < list.length; i++) {
-			for (var j = i+1; j < list.length; j++) {
-				if (list[j] < list[i]) {
-					temp = list[i];
-					list[i] = list[j];
-					list[j] = temp;	
-				}
+	if (!iterator) {
+		iterator == identity;
+	}
+
+	var temp;
+	for (var i = 0; i < list.length; i++) {
+		for (var j = i+1; j < list.length; j++) {
+			if (iterator(list[j]) < iterator(list[i])) {
+				temp = list[i];
+				list[i] = list[j];
+				list[j] = temp;	
 			}
 		}
-		return list;		
-	};
-	if (arguments.length > 1) {
-		var arr;
-		jEach(list, function (elements, index, array) {
-			arr.push(iterator(elements));
-		});
-
-		sort(arr);	
-	} else {
-		sort(list);
 	}
+	return list;		
 };
 
 /*
@@ -270,3 +272,222 @@ var jreduceRight = function (list, iterator, memo) {
 
 var jFindWhere = function (list, properties) {};
 */
+
+
+//----------------Functions------------------//
+
+//var func = function(greeting){ return greeting + ': ' + this.name };
+//func = _.bind(func, {name: 'moe'}, 'hi');
+//func();
+//=> 'hi: moe'
+
+var bind = function (func, obj, arguments) {
+	return func.call(obj, arguments);
+};
+
+
+/*
+var buttonView = {
+  label  : 'underscore',
+  onClick: function(){ alert('clicked: ' + this.label); },
+  onHover: function(){ console.log('hovering: ' + this.label); }
+};
+_.bindAll(buttonView, 'onClick', 'onHover');
+// When the button is clicked, this.label will have the correct value.
+jQuery('#underscore_button').bind('click', buttonView.onClick);
+*/
+
+//---------------Object Functions--------//
+var keys = function (object) {
+	if (!isObject(object)) {
+		return [];
+	}
+
+	var arr = [];
+	for (var key in object) {
+		arr.push(key);
+	}
+	return arr;
+};
+
+var values = function (object) {
+	if (!isObject(object)) {
+		return [];
+	}
+
+	var arr = [];
+	for (var key in object) {
+		arr.push(object[key]);
+	}
+	return arr;
+};
+
+var pairs = function (object) {
+	if (!isObject(object)) {
+		return [];
+	}
+
+	var arr = [];
+	for (var key in object) {
+		arr.push([key, object[key]]);
+	}
+	return arr;
+};
+
+var invert = function (object) {
+	if (!isObject(object)) {
+		return {};
+	}
+	
+	var res = {};
+	for (var key in object) {
+		var obj = object[key];
+		var stringify = obj.toString();
+		console.log(stringify);
+		res[stringify] = key;
+	}
+	return res;
+};
+
+var functions = function(object) {
+	var names = [];
+	for (var key in object) {
+		if (isFunction(object[key])) {
+			names.push(key);
+		}
+	}
+	return names.sort();
+};
+
+var extend = function (destination) {
+	each(slice.call(arguments, 1), function (obj) {
+		for (var key in obj) {
+			destination[key] = obj[key];
+		}
+	});
+	return destination;
+};
+
+var pick = function (object) {
+	var copy = {};
+	each(slice.call(arguments, 1), function (search) {
+		for (var key in object) {
+			if (search == key) {
+				copy[key] = object[key];
+			}
+		}
+	});
+	return copy;
+};
+
+var omit = function (object) {
+	var copy = {};
+	var keys = slice.call(arguments,1);
+	for (var key in object) {
+		if (!contains(keys, key)) {
+			copy[key] = object[key];
+		}
+	}
+	return copy;
+};
+
+var defaults = function (object, defaults) {
+	each(slice.call(arguments,1), function (source) {
+		for (var key in source) {
+			if(object[key] == 'undefined') {
+					object[key] = source[key];
+			}
+		}
+	})
+	return object;
+};
+
+var clone = function (obj) {
+	if (isObject(obj)) {
+		return obj;
+	}
+};
+//I don't get underscore's version...
+
+var tap = function(object, interceptor) {
+	interceptor(object);
+	return object;
+};
+
+var has = function(object, key) {
+	return hasOwnProperty.call(object, key);
+};
+
+var property = function(key) {
+	return function(obj){
+		return obj[key];
+	};
+};
+
+var matches= function (attrs){
+	return function (obj) {
+		for (var key in attrs) {
+			if (attrs[key] != obj[key]) {
+				return false;
+			} else {
+				return true
+			}
+		}
+	}
+};
+
+var isEqual = function (object, other) {
+	//code goes here
+};
+
+var isEmpty = function (object) {
+	if (object == null) return true;
+	if (isArray(object)) return object.length === 0;
+};
+
+var isFunction = function (object) {
+	return typeof object === 'function';
+};
+
+var isObject = function (object) {
+	return object === Object(object);
+};
+
+var isArray = function(object) {
+	return typeof object === 'array';
+}
+//---------------Utility------------------//
+var noConflict = function (){
+	//
+};
+
+
+var identity = function(val) {
+	return val;
+};
+
+var constant = function(value){
+	return function(){
+		return value;
+	};	
+};
+
+var times = function(n, iterator, context){
+	var arr = [];
+	for (var i = 0; i < n; i++) {
+		arr.push(iterator(context, i));
+	}
+	return arr;
+};
+
+var random = function (min, max) {
+	if (max == null) {
+		max = min;
+		min = 0;
+	}
+	return Math.floor(min + Math.random()* (max-min+1));
+};
+
+var mixin = function (object) {
+
+};
